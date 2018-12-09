@@ -4,13 +4,28 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>CoffeeScript</title>
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/black.css">
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<style>
+			.code {
+				color:chocolate;
+				background-color: #3f3f3f;
+			}
+			.small {
+				font-size: 24px !important;
+			}
+			.half {
+				width:50% !important;
+				float:left;
+				background-color: #3f3f3f;
+			}
+			
+		</style>
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -20,12 +35,1174 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
+		
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h1>Amazing <span style="color:chocolate">CoffeeScript</span></h1>
+					<span>Author: Andrey Vintskevich</span>
+					<div><time>06-12-2018</time></div>
+				</section>
+				<section>
+					<h3>History</h3>
+					<small><p>On December 13, 2009, Jeremy Ashkenas made the first Git
+						 commit of CoffeeScript with the comment: "initial commit of the
+						  mystery language." <br> On December 24, he made the first tagged
+						   and documented release, 0.1.0. <br> On December 24, 2010, Ashkenas
+						   announced the release of stable 1.0.0 to Hacker News, the site 
+						   where the project was announced for the first time.<br>
+						On September 18, 2017, version 2.0.0 was introduced, which "aims to
+						 bring CoffeeScript into the modern JavaScript era, closing gaps in 
+						 compatibility with JavaScript while preserving the clean syntax that
+						  is CoffeeScript’s hallmark."<br>
+					   </p></small>
+				</section>
+				<section>
+					<h3>
+						What is CoffeeScript?
+					</h3>
+					<p>
+						CoffeeScript is an attempt to expose the good parts of JavaScript 
+						in a simple way. The golden rule of CoffeeScript is: “It’s just JavaScript.” 
+						The compiled output is readable, pretty-printed, and tends to run as fast or 
+						faster than the equivalent handwritten JavaScript.
+					</p>
+				</section>
+				<section>
+					<span>Current version: 2.3.2</span>
+					<p>
+						The biggest change in CoffeeScript 2 is that now the CoffeeScript compiler produces
+						modern JavaScript syntax (ES6 and later). A CoffeeScript <code class="code">=></code> becomes a JS <code class="code">=></code>, a 
+						CoffeeScript <code class="code">class</code> becomes a JS <code class="code">class</code> and so on. Major new features in CoffeeScript 
+						2 include <span class="code">async functions and JSX</span>.
+					</p>
+				</section>
+				<section>
+					<h3>Installation</h3>
+					<pre><code data-trim data-noescape>
+							# Install locally for a project:
+							npm install --save-dev coffeescript
+
+							# Install globally to execute .coffee files anywhere:
+							npm install --global coffeescript
+					</pre></code>
+				</section>
+				<section>
+					<section>
+						<h3>Transpilation</h3>
+						<p>
+							CoffeeScript 2 generates JavaScript that uses the latest, modern syntax. 
+							The runtime or browsers where you want your code to run might not support
+							all of that syntax. In that case, we want to convert modern JavaScript into
+							older JavaScript that will run in older versions of Node or older browsers. 
+							This is done via transpilers like <span class="code">Babel</span>.
+						</p>
+					</section>
+					<section>
+						<h3>Transpiling with the CoffeeScript compiler</h3>
+						<small><p>
+							To make things easy, CoffeeScript has built-in support for the popular <span class="code">Babel</span>
+							transpiler. You can use it via the <code class="code">--transpile</code> command-line option or the 
+							transpile Node API option. To use either, <span class="code">@babel/core</span> must be installed in your project:
+						</p>
+						<pre><code>npm install --save-dev @babel/core</code></pre>
+						<p>
+							Or if you’re running the coffee command outside of a project folder, using a globally-installed 
+							coffeescript module, <span class="code">@babel/core</span> needs to be installed globally:
+						</p>
+						<pre><code>npm install --global @babel/core</code></pre></small>
+					</section>
+					<section>
+						<p>
+							By default, <span class="code">Babel</span> doesn’t do anything. You need to provide it with a configuration so that 
+							it knows what to do. One way to do this is by creating a <code class="code">.babelrc</code> file in the folder containing 
+							the files you’re compiling, or in any parent folder up the path above those files. 
+							A minimal <code class="code">.babelrc</code> file would be just:
+						</p>
+						<pre><code>{ "presets": ["@babel/env"] }.</code></pre>
+						<p>
+							This implies that you have installed <span>@babel/preset-env</span>:
+						</p>
+						<pre><code data-trim data-noescape>
+							npm install --save-dev @babel/preset-env
+							# Or --global for non-project-based usage
+						</code></pre>
+					</section>
+					<section>
+						<p>
+							Once you have <span class="code">@babel/core</span> and <span class="code">@babel/preset-env</span> (or other presets or plugins) installed, and 
+							a <span class="code">.babelrc</span> file (or other equivalent) 
+							in place, you can use:
+						</p>
+						<pre><code data-trim data-noescape>
+								coffee --transpile 
+						</code></pre>
+						<p>
+							to pipe CoffeeScript’s output through Babel using the options you’ve saved.
+						</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Language Reference</h3>
+						<p class= "small">
+							First, that we need to know is that CoffeeScript uses significant whitespace to delimit blocks of code. 
+							You don’t need to use semicolons <code class="code">;</code> to terminate expressions, ending the line will do just as well 
+							(although semicolons can still be used to fit multiple expressions onto a single line). 		
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+								#CoffeeScript
+								number = 42
+								opposite = true
+								<br>
+							</code></pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var number,opposite
+							number = 42;
+							opposite = true;
+						</code></pre>
+					</section>
+					<section>
+						<p>
+							Instead of using curly braces <code class="code">{ }</code> to surround blocks of code in functions, if-statements, switch, 
+							and try/catch, use indentation.
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+								#CoffeeScript
+								square = (x) -> x * x
+						</code>
+						</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var square = function(x) {
+								return x * x;
+							  };
+						</code></pre>
+					</section>
+					<section>
+						<p>
+							You don’t need to use parentheses to invoke a function if you’re passing arguments. The implicit
+							call wraps forward to the end of the line or block expression.
+						</p>
+						<pre><code data-trim data-noescape>
+								console.log sys.inspect object → console.log(sys.inspect(object));
+						</code></pre>
+					</section>	
+				</section>
+				<section>
+					<section>
+						<h3>Functions</h3>
+						<p>Functions are defined by an optional list of parameters in parentheses, an arrow, and the function body.
+							The empty function looks like thin arrow: <code class="code">-></code>
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+								#CoffeeScript
+								square = (x) -> x * x
+								cube   = (x) -> square(x) * x
+						</code>
+						
+						
+
+
+						</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var cube, square;
+
+							square = function(x) {
+							return x * x;
+							};
+							cube = function(x) {
+							return square(x) * x;
+							};
+						</code></pre>
+					</section>
+					<section><small>
+						<p>
+							Functions may also have default values for arguments, which will be used if the incoming argument is missing (undefined).
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+							#CoffeeScript
+							fill = (container, liquid = "coffee") ->
+							"Filling the #{container} with #{liquid}..."
+						</code>
+						
+						</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var fill;
+
+							fill = function(container, liquid = "coffee") {
+							return `Filling the ${container} with ${liquid}...`;
+							};
+						</code></pre>
+						<p>
+							As you can see, there is no <code class="code">return</code> statement in 
+							CoffeeScript examples, but it is not mandatory to use the 
+							<code class="code">return</code> keyword in CoffeeScript.
+							Every function in CoffeeScript returns the last statement in the function automatically.
+						</p>
+					</small></section>
+				</section>
+				<section>
+					<section><small>
+						<h3>Strings</h3>
+						<p>
+							Like JavaScript and many other languages, CoffeeScript supports strings as
+							 delimited by the <code class="code">"</code>  or  <code class="code">'</code> characters. CoffeeScript 
+							also supports string interpolation within<code class="code">"</code>-quoted strings, using <code class="code">#{ … }</code>. 
+							Single-quoted strings are literal. You may even use interpolation in object keys.
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+								#CoffeeScript
+								author = "Wittgenstein"
+								quote  = "A picture is a fact. -- #{ author }"
+								sentence = "#{ 22 / 7 } is a decent approximation of π"
+							</code>
+							</pre>
+							<pre class="half"><code data-trim data-noescape>
+								//JavaScript
+								var author, quote, sentence;
+
+								author = "Wittgenstein";
+								quote = `A picture is a fact. -- ${author}`;
+								sentence = `${22 / 7} is a decent approximation of π`;
+							</code></pre>
+					</small></section>
+					<section>
+						<p>
+							Multiline strings are allowed in CoffeeScript. Lines are joined by a single 
+							space unless they end with a backslash. Indentation is ignored.
+						</p>
+						<pre><code data-trim data-noescape>
+							#CoffeeScript
+							mobyDick = "Call me Ishmael. Some years ago –
+								never mind how long precisely – having
+							little
+							or no money in my purse, and nothing
+							particular
+							to interest me on shore, I thought I would
+							sail
+							about a little and see the watery part of
+							the
+							world..."
+						</code></pre>
+					</section>
+					<section>
+						<p>
+							Block strings, delimited by <code class="code">"""</code> or <code class="code">'''</code>, can be used to hold formatted or indentation-sensitive text. 
+							Double-quoted block strings, like other double-quoted strings, allow interpolation.
+						</p>
+						<pre><code data-trim data-noescape>
+							#CoffeeScript
+							html = """
+
+							
+							  cup of coffeescript
+							
+							"""
+					 
+						</code></pre>
+					</section>
+				</section>
+				<section><small>
+					<h3>Objects and Arrays</h3>
+					<p>
+						The CoffeeScript literals for objects and arrays look very similar to their JavaScript cousins. When each property is listed on its own 
+						line, the commas are optional. Objects may be created using indentation instead of explicit braces.
+					</p>
+					<pre class="half"><code data-trim data-noescape>
+						#CoffeeScript
+						kids =
+						brother:
+						  name: "Max"
+						  age:  11
+						sister:
+						  name: "Ida"
+						  age:  9	  
+					</code>
+
+					</pre>
+					<pre class="half"><code data-trim data-noescape>
+						//JavaScript
+						var kids = {
+							brother: {
+							  name: "Max",
+							  age: 11
+							},
+							sister: {
+							  name: "Ida",
+							  age: 9
+							}
+							  };
+						</code></pre>
+					</small></section>
+					<section><small>
+						<h3>Comments</h3>
+						<p>
+							In CoffeeScript, comments are denoted by the <code class="code">#</code> character to the end of a line, or 
+							from <code class="code">###</code> to the next appearance of <code class="code">###</code>. Comments are ignored by the compiler, though 
+							the compiler makes its best effort at reinserting your comments into the output JavaScript 
+							after compilation.
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+								#CoffeeScript
+								###
+								Fortune Cookie Reader v1.0
+								Released under the MIT License
+								###
+
+								sayFortune = (fortune) ->
+								console.log fortune # in bed!
+	  
+							</code>
+							</pre>
+							<pre class="half"><code data-trim data-noescape>
+								//JavaScript
+								/*
+								Fortune Cookie Reader v1.0
+								Released under the MIT License
+								*/
+								var sayFortune;
+
+								sayFortune = function(fortune) {
+								return console.log(fortune); // in bed!
+								};
+								</code></pre>
+
+					</small></section>
+					<section>
+						<section>
+							<small>
+								<h3>Lexical Scoping and Variable Safety</h3>
+								<p>
+									The CoffeeScript compiler takes care to make sure that all of your variables are 
+									properly declared within lexical scope — you never need to write <code class="code">var</code> yourself.
+									All of the variable declarations have been pushed up to the top of the closest 
+									scope, the first time they appear. 
+								</p>
+								<pre class="half"><code data-trim data-noescape>
+										#CoffeeScript
+										outer = 1
+										changeNumbers = ->
+										  inner = -1
+										  outer = 10
+										inner = changeNumbers() #10
+									</code>
+
+									</pre>
+									<pre class="half"><code data-trim data-noescape>
+										//JavaScript
+										var changeNumbers, inner, outer;
+										outer = 1;
+										changeNumbers = function() {
+										  var inner;
+										  inner = -1;
+										  return outer = 10;
+										};
+										inner = changeNumbers(); //10
+										</code></pre>
+									<p>
+										In this example <code class="code">outer</code> is not redeclared within the <code class="code">inner</code> function, because it’s already 
+										in scope; <code class="code">inner</code> within the function, on the other 
+										hand, should not be able to change the value of the external variable
+										 of the same name, and therefore has a declaration of its own.
+									</p>
+							</small>
+						</section>
+						<section>
+							<p class="small">
+								It`s important that all CoffeeScript output (except in files with <code class="code">import</code> or <code class="code">export</code> statements) 
+								is wrapped in an anonymous function: <code class="code">(function(){ … })();</code>. This safety wrapper, combined with
+								 the automatic generation of the <code class="code">var</code> keyword, make it exceedingly difficult to 
+								 pollute the global namespace by accident. (The safety wrapper can be disabled with the <code class="code">bare</code>
+								  option, and is unnecessary and automatically disabled when using modules.)
+								If you’d like to create top-level variables for other scripts to use, attach them as 
+								properties on <code class="code">window</code> or use an <code class="code">export</code> statement. 
+								Also it is not possible to declare variables with ES2015’s <code class="code">let</code> or <code class="code">const</code>. 	
+							</p>
+						</section>
+					</section>
+					<section><small>
+						<h3>If, Else, Unless, and Conditional Assignment</h3>
+						<p>
+								<code class="code">if/else</code> statements can be written without the use of parentheses and curly brackets. 
+								As with functions and other block expressions, 
+								multi-line conditionals are delimited by indentation. There’s also a handy 
+								postfix form, with the <code class="code">if</code> or <code class="code">unless</code> at the end.
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+								#CoffeeScript
+								mood = greatlyImproved if singing
+								if happy and knowsIt
+									clapsHands()
+									chaChaCha()
+								else
+									showIt()
+
+							</code>
+
+
+							</pre>
+							<pre class="half"><code data-trim data-noescape>
+								//JavaScript
+								var date;
+								if (singing) {
+									mood = greatlyImproved;
+								}
+								if (happy && knowsIt) {
+									clapsHands();
+									chaChaCha();
+								} else {
+									showIt()
+								}
+								</code></pre>
+								<p>
+									CoffeeScript can compile <code class="code">if</code> statements into JavaScript expressions, using the 
+									ternary operator when possible, and closure wrapping otherwise. 
+									There is no explicit ternary statement in CoffeeScript — 
+									you simply use a regular <code class="code">if</code> statement on a single line.
+								</p>
+								<pre class="half"><code data-trim data-noescape>
+										#CoffeeScript
+										date = if friday then sue else jill
+								</code>
+
+								</pre>
+									<pre class="half"><code data-trim data-noescape>
+										//JavaScript
+										var date
+										date = friday ? sue : jill;
+									</code>
+								</pre>
+					</small></section>
+					<section>
+						<section><small>
+							<h3>Splats, or Rest Parameters/Spread Syntax</h3>
+							<p>
+								The JavaScript <code class="code">arguments</code> object is a useful way to work with functions 
+								that accept variable numbers of arguments. CoffeeScript provides splats <code class="code">...</code>,
+								both for function definition as well as invocation, making variable numbers 
+								of arguments a little bit more palatable. ES2015 adopted this 
+								feature as their rest parameters.	
+							</p>
+							<pre class="half"><code data-trim data-noescape>
+									#CoffeeScript
+									gold = silver = rest = "unknown"
+
+									awardMedals = (first, second, others...) ->
+									  gold   = first
+									  silver = second
+									  rest   = others
+
+									contenders = [
+									  "Michael Phelps"
+									  "Liu Xiang"
+									  "Yao Ming"
+									  "Allyson Felix"
+									  "Shawn Johnson"
+									  "Roman Sebrle"
+									]
+
+									awardMedals contenders...
+
+									alert """
+									Gold: #{gold}
+									Silver: #{silver}
+									The Field: #{rest.join ', '}
+									"""
+							</code>
+							</pre>
+							<pre class="half"><code data-trim data-noescape>
+									//JavaScript
+									var awardMedals, contenders, gold, rest, silver;
+									gold = silver = rest = "unknown";
+									awardMedals = function(first, second, ...others) {
+									  gold = first;
+									  silver = second;
+									  return rest = others;
+									};
+
+									contenders = ["Michael Phelps", "Liu Xiang", "Yao Ming", 
+									"Allyson Felix", "Shawn Johnson", "Roman Sebrle", 
+									"Guo Jingjing", "Tyson Gay", "Asafa Powell", "Usain Bolt"];
+
+									awardMedals(...contenders);
+
+									alert(`Gold: ${gold}\nSilver: ${silver}\n
+									The Field: ${rest.join(', ')}`);
+							</code>
+
+
+
+
+
+
+
+							</pre>
+						</small></section>
+						<section>
+							<p>
+								Splats also let us elide array elements...
+							</p>
+							<small><pre class="half"><code data-trim data-noescape>
+									#CoffeeScript
+									popular  = ['pepperoni', 'sausage', 'cheese']
+									unwanted = ['anchovies', 'olives']
+									all = [popular..., unwanted..., 'mushrooms']
+							</code>
+
+							</pre>
+								<pre class="half"><code data-trim data-noescape>
+									//JavaScript
+									var all, popular, unwanted;
+									popular = ['pepperoni', 'sausage', 'cheese'];
+									unwanted = ['anchovies', 'olives'];
+									all = [...popular, ...unwanted, 'mushrooms'];
+								</code>
+							</pre></small>
+						</section>
+						<section>
+								<p>
+										…and object properties.
+								</p>
+								<small><pre class="half"><code data-trim data-noescape>
+										#CoffeeScript
+										user =
+										  name: 'Werner Heisenberg'
+										  occupation: 'theoretical physicist'
+										currentUser = { user..., status: 'Uncertain' }
+								</code>
+	
+
+
+								</pre>
+									<pre class="half"><code data-trim data-noescape>
+										//JavaScript
+										var currentUser, user;
+										user = {
+										  name: 'Werner Heisenberg',
+										  occupation: 'theoretical physicist'
+										};
+										currentUser = {
+										  ...user,
+										  status: 'Uncertain'
+										};
+									</code></pre></small>
+									<p>
+										In ECMAScript this is called spread syntax, and has been 
+										supported for arrays since ES2015 and objects since ES2018.
+									</p>
+							</section>
+					</section>
+					<section>
+						<section><small>
+							<h3>Loops and Comprehensions</h3>
+							<p>
+								<code class="code">While</code> loop and its variants are the only loop constructs in CoffeeScript. 
+								There is no need of the parenthesis to specify the Boolean expression and 
+								we have to indent the body of the loop using (consistent 
+								number of) whitespaces instead of wrapping it with curly braces. The main 
+								difference from JavaScript is that the <code class="code">while</code> loop can be used as an expression, 
+								returning an array containing the result of each iteration through the loop.
+								Also for readability, the <code class="code">until</code> keyword is equivalent to while <code class="code">false</code>, and the 
+								<code class="code">while</code> keyword is equivalent to while <code class="code">true</code>.
+							</p>
+							<pre class="half"><code data-trim data-noescape>
+									#CoffeeScript
+									# Econ 101
+									if this.studyingEconomics
+									  buy()  while supply > demand
+									  sell() until supply > demand
+									
+									# Nursery Rhyme
+									num = 6
+									lyrics = while num -= 1
+									  "#{num} little monkeys, jumping on the bed.
+										One fell out and bumped his head."
+							</code>
+
+
+
+
+
+
+
+
+
+							</pre>
+								<pre class="half"><code data-trim data-noescape>
+									//JavaScript
+									// Econ 101
+									var lyrics, num;
+									if (this.studyingEconomics) {
+									  while (supply > demand) {
+										buy();
+									  }
+									  while (!(supply > demand)) {
+										sell();
+									  }
+									}
+									// Nursery Rhyme
+									num = 6;
+									lyrics = (function() {
+									  var results;
+									  results = [];
+									  while (num -= 1) {
+										results.push(`${num} little monkeys, jumping on 
+										the bed. One fell out and bumped his head.`);
+									  }
+									  return results;
+									})();
+								</code></pre>
+						</small></section>
+						<section><small>
+							<p>
+								Instead of the commonly used <code class="code">for</code> loop, CoffeeScript 
+								provides <span class="code">Comprehensions</span>.
+								Comprehensions – is additional loop structure.
+								 Using comprehensions,
+								 we can iterate arrays as well as objects.Comprehensions 
+								 replace (and compile into) <code class="code">for</code> loops, with optional 
+								 guard clauses and the value of the current array index. Unlike <code class="code">for</code> 
+								 loops, array comprehensions are expressions, and can be returned and assigned.<br>
+								 There are two types of  comprehensions:
+							</p>
+						</small></section>
+						<section><small>
+								<h4><code class="code">for..in</code> comprehensions</h4>
+								<p>
+									The <code class="code">for..in</code> comprehension is the basic form of 
+									comprehension in CoffeeScript. Using 
+									this we can iterate the elements of a list or array.
+								</p>
+								<pre class="half"><code data-trim data-noescape>
+										#CoffeeScript
+										for student in ['Ram', 'Mohammed', 'John']
+											console.log student
+								</code>
+
+
+								</pre>
+									<pre class="half"><code data-trim data-noescape>
+										//JavaScript
+										var i, len, ref, student;
+										ref = ['Ram', 'Mohammed', 'John'];
+										for (i = 0, len = ref.length; i < len; i++) {
+										  student = ref[i];
+										  console.log(student);
+										}
+									</code></pre>
+							</small></section>
+							<section><small>
+									<h4><code class="code">for..of</code> comprehensions</h4>
+									<p>
+										CoffeeScript provides a container to store key-value pairs known 
+										as objects. We can iterate objects using the <code class="code">for..of</code> comprehensions provided by CoffeeScript.
+									</p>
+									<pre class="half"><code data-trim data-noescape>
+											#CoffeeScript
+											for key,value of { key1: value, key2: value, key3: value}
+												console.log key+"::"+value
+									</code>
+	
+	
+									
+
+
+
+									</pre>
+										<pre class="half"><code data-trim data-noescape>
+											//JavaScript
+											var key, ref, value;
+											ref = {
+											  name: "Mohammed",
+											  age: 24,
+											  phone: 9848022338
+											};
+											for (key in ref) {
+											  value = ref[key];
+											  console.log(key + "::" + value);
+											} 
+										</code></pre>
+										<p>
+											ES6 also have <code class="code">for..of</code> loops.  The difference is that ES6 <code class="code">for..of</code> statement creates a 
+											loop iterating over iterable objects, 
+											including: built-in String, Array, Array-like objects 
+											(e.g., arguments or NodeList), TypedArray, Map, Set, and user-defined iterables.
+										</p>
+								</small></section>
+								<section><smal>
+									<p>
+										The list/array of elements have an <span class="code">index</span> which can be used in comprehensions. 
+										You can use it in comprehensions using a variable as shown below.
+									</p>
+									<pre><code data-trim data-noescape>
+											for student,i in [element1, element2, element3]
+												console.log "#{student} id:#{i}"
+									</code></pre>	
+								</smal></section>
+								<section>
+									<p>
+										CoffeeScript provides <span class="code">ranges</span> to define a list of elements. 
+										For example, the range <code class="code">[1..10]</code> is 
+										equivalent to <code class="code">[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</code> where, 
+										every element is incremented by 1. We can also change this increment 
+										using the <code class="code">by</code> 
+										keyword of comprehensions. Example: 
+									</p>
+									<pre><code data-trim data-noescape>
+											evens = (x for x in [0..10] by 2)
+									</code></pre>
+								</section>
+					</section>
+					<section><small>
+						<h3>Array Slicing and Splicing with Ranges</h3>
+						<p>
+							Ranges can also be used to extract slices of arrays. With two dots <code class="code">(3..6)</code>, the range 
+							is inclusive <code class="code">(3, 4, 5, 6)</code>; with three dots <code class="code">(3...6)</code>, 
+							the range excludes the end <code class="code">(3, 4, 5)</code>. 
+							Slices indices have useful defaults. An omitted first index defaults to zero 
+							and an omitted second index defaults to the size of the array.
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+								#CoffeeScript
+								numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+								start   = numbers[0..2]
+								middle  = numbers[3...-2]
+								end     = numbers[-2..]
+								copy    = numbers[..]
+						</code>
+
+						</pre>
+							<pre class="half"><code data-trim data-noescape>
+								//JavaScript
+								var copy, end, middle, numbers, start;
+								numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+								start = numbers.slice(0, 3);
+								middle = numbers.slice(3, -2);
+								end = numbers.slice(-2);
+								copy = numbers.slice(0);
+							</code>
+						</pre>
+							<p>
+								The same syntax can be used with assignment to 
+								replace a segment of an array with new values, splicing it.
+							</p>
+							<pre class="half"><code data-trim data-noescape>
+									#CoffeeScript
+									numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+									numbers[3..6] = [-3, -4, -5, -6]
+							</code>
+
+							</pre>
+								<pre class="half"><code data-trim data-noescape>
+									//JavaScript
+									var numbers, ref,
+									splice = [].splice;
+									numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+									splice.apply(numbers, 
+									[3, 4].concat(ref = [-3, -4, -5, -6])), ref;
+								</code></pre>
+					</section></small>
+				<section>
+					<section>
+						<h3>Operators and Aliases</h3>
+						<p>Here you can see how CoffeeScript compiles operators</p>
+						<pre class="half"><code data-trim data-noescape>
+							#CoffeeScript
+							is
+							isnt
+							not
+							and
+							or
+							true, yes, on
+							false, no, off 
+							@, this
+							a in b
+							a of b
+							for a from b
+						</code></pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							= = =
+							!= =
+							!
+							&&
+							||
+							true
+							false
+							this
+							[].indexOf.call(b, a) >= 0
+							a in b
+							for (a of b)
+						</code></pre>
+					</section>
+					<section><small>
+						<ul>
+							<li>instead of a newline or semicolon, <code class="code">then</code> can be 
+								used to separate conditions from expressions, in <code class="code"> while</code>, <code class="code">if/else</code>, 
+								and <code class="code">switch/when</code> statements.</li>
+							<li><code class="code">on</code> and <code class="code">yes</code> are the same as boolean <code class="code">true</code>
+								, while <code class="code">off</code> 
+								and <code class="code">no</code> are boolean <code class="code">false</code></li>
+							<li><code class="code">unless</code> can be used as the inverse of <code class="code">if</code>.</li>
+							<li>As a shortcut for <code class="code">this.property</code>, you can use <code class="code">@property</code>.</li>
+							<li>In a <code class="code">for</code> loop, <code class="code">from</code> compiles to the ES2015 <code class="code">of</code>.</li>
+						</ul>
+						<pre class="half"><code data-trim data-noescape>
+							#CoffeeScript
+							launch() if ignition is on
+							volume = 10 if band isnt SpinalTap
+							letTheWildRumpusBegin() unless answer is no
+							if car.speed < limit then accelerate()
+							winner = yes if pick in [47, 92, 13]
+							print inspect "My name is #{@name}"
+						</code>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+						</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var volume, winner;
+							if (ignition === true) {
+							  launch();
+							}
+							if (band !== SpinalTap) {
+							  volume = 10;
+							}
+							if (answer !== false) {
+							  letTheWildRumpusBegin();
+							}
+							if (car.speed < limit) {
+							  accelerate();
+							}
+							if (pick === 47 || pick === 92 || pick === 13) {
+							  winner = true;
+							}
+							print(inspect(`My name is ${this.name}`));
+						</code></pre>
+					</small></section>
+				</section>
+				<section><small>
+					<h3>Destructuring Assignment</h3>
+					<p>
+						Just like JavaScript (since ES2015), CoffeeScript has destructuring assignment syntax. 
+						When you assign an array or object literal to a value, CoffeeScript
+						breaks up and matches both sides against each other, 
+						assigning the values on the right to the variables on the left. 
+						In the simplest case, it can be used for parallel assignment:
+					</p>
+					<pre class="half"><code data-trim data-noescape>
+						#CoffeeScript
+						theBait   = 1000
+						theSwitch = 0
+						[theBait, theSwitch] = [theSwitch, theBait]
+					</code>
+
+					</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var theBait, theSwitch;
+							theBait = 1000;
+							theSwitch = 0;
+							[theBait, theSwitch] = [theSwitch, theBait];
+						</code>
+					</pre>
+					<p>
+						But it’s also helpful for dealing with functions that return multiple values.
+					</p>
+					<pre class="half"><code data-trim data-noescape>
+						#CoffeeScript
+						weatherReport = (location) ->
+						  [location, 72, "Mostly Sunny"]
+						[city, temp, forecast] = weatherReport "Berkeley, CA"
+					</code>
+					</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var city, forecast, temp, weatherReport;
+							weatherReport = function(location) {
+							  return [location, 72, "Mostly Sunny"];
+							};
+							[city, temp, forecast] = weatherReport("Berkeley, CA");
+						</code></pre>
+				</small></section>	
+				<section><small>
+					<h3>Bound (Fat Arrow) Functions</h3>
+					<p>
+						In JavaScript, the <code class="code">this</code> keyword is dynamically scoped to mean the object
+						that the current function is attached to. If you pass a function as a callback or attach 
+						it to a different object, the original value of <code class="code">this</code> will be lost. 
+						In CoffeeScript The fat arrow <code class="code">=></code> can be used to both define a function, and
+						to bind it to the current value of <code class="code">this</code>, right on the spot. Functions created 
+						with the fat arrow are able to access properties of the <code class="code">this</code> where they’re defined.	
+					</p>
+					<pre class="half"><code data-trim data-noescape>
+						#CoffeeScript
+						Person = ->
+						  @age = 0
+						  setInterval => @age++, 1000
+					</code>
+
+					</pre>
+					<pre class="half"><code data-trim data-noescape>
+						//JavaScript
+						function Person() { 
+						  var self = this; 
+						  self.age = 0; 
+						  setInterval(function growUp()self.age++; }, 1000); }	
+					</code>
+					</pre>
+					<p>
+						The fat arrow was one of the most popular features of CoffeeScript, 
+						and ES2015 adopted it; so CoffeeScript 2 compiles <code class="code">=></code> to ES2015 <code class="code">=></code>.
+					</p>
+				</small></section>
+				<section><small>
+					<h3>Classes</h3>
+					<p>
+						CoffeeScript 1 provided the <code class="code">class</code> and <code class="code">extends</code> 
+						keywords as syntactic sugar for working 
+						with prototypal functions. With ES2015, JavaScript has adopted those keywords; so CoffeeScript 2
+						compiles its <code class="code">class</code> and <code class="code">extends</code> keywords 
+						to ES2015 classes. Also static methods can be 
+						defined using <code class="code">@</code> before the method name.
+					</p>
+					<pre><code data-trim data-noescape>
+					#CoffeeScript
+					class Animal
+					  constructor: (@name) ->
+					  
+					  move: (meters) ->
+					    alert @name + " moved #{meters}m."
+					  
+					class Snake extends Animal
+					  move: ->
+					    alert "Slithering..."
+					    super 5
+					  
+					class Horse extends Animal
+					  move: ->
+				        alert "Galloping..."
+					    super 45
+					  
+					sam = new Snake "Sammy the Python"
+					tom = new Horse "Tommy the Palomino"
+					  
+					sam.move()
+					tom.move()  
+					</code></pre>
+					
+				</small></section>
+				<section>
+					<h3>Prototypal Inheritance</h3>
+					<p>
+						In addition to supporting ES2015 classes, CoffeeScript provides a shortcut for 
+						working with prototypes. The <code class="code">::</code> operator gives 
+						you quick access to an object’s prototype:
+					</p>
+					<pre class="half"><code data-trim data-noescape>
+						#CoffeeScript
+						String::dasherize = ->
+						  @replace /_/g, "-"
+					</code>
+					
+					
+					</pre>
+					<pre class="half"><code data-trim data-noescape>
+						//JavaScript
+						String.prototype.dasherize =
+						 function() {
+						    return this.replace(/_/g, "-");
+						  };
+					</code>
+					</pre>
+				</section>
+				<section>
+					<section><small>
+						<h3>Switch/When/Else</h3>
+						<p>
+							In <code class="code">switch/case</code> construction CoffeeScript prevents 
+							accidental fall-through, and can convert 
+							the switch into a returnable, assignable 
+							expression. The format is:<br> <code class="code">switch condition, when 
+							clauses, else the default case.</code><br>
+							<code class="code">switch</code> statements in CoffeeScript can take multiple values
+							 for each <code class="code">when</code> clause. If any of the values match, the clause runs.
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+							#CoffeeScript
+							switch day
+							  when "Mon" then go work
+							  when "Tue" then go relax
+							  when "Thu" then go iceFishing
+							  when "Fri", "Sat"
+							    if day is bingoDay
+								  go bingo
+								  go dancing
+							  when "Sun" then go church
+							  else go work
+						</code>
+						
+
+
+
+
+
+						
+						</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							switch (day) {
+							  case "Mon":
+							    go(work);break;
+							  case "Tue":
+							    go(relax);break;
+							  case "Thu":
+							    go(iceFishing);break;
+							  case "Fri":
+							  case "Sat":
+							    if (day === bingoDay) {
+							 	  go(bingo);
+								  go(dancing);
+								}
+							  break;
+							  case "Sun":
+							    go(church);break;
+							  default:
+							    go(work);
+							}							  
+						</code></pre>
+					</small></section>
+					<section><small>
+						<p>
+							<code class="code">switch</code> statements can also be used without a control 
+							expression, turning them in to a cleaner alternative to <code class="code">if/else</code> chains.
+						</p>
+						<pre class="half"><code data-trim data-noescape>
+							#CoffeeScript
+							score = 76
+							grade = switch
+							  when score < 60 then 'F'
+							  when score < 70 then 'D'
+							  when score < 80 then 'C'
+							  when score < 90 then 'B'
+							  else 'A'
+							# grade == 'C'
+						</code>
+						
+
+
+
+
+
+
+						
+						</pre>
+						<pre class="half"><code data-trim data-noescape>
+							//JavaScript
+							var grade, score;
+							score = 76;
+							grade = (function() {
+							  switch (false) {
+								case !(score < 60):
+								  return 'F';
+								case !(score < 70):
+								  return 'D';
+								case !(score < 80):
+								  return 'C';
+								case !(score < 90):
+								  return 'B';
+								default:
+								  return 'A';
+							  }
+							})();
+							
+							// grade == 'C'
+						</code></pre>
+					</small></section>
+				</section>
+				<section><small>
+					<h3>Try/Catch/Finally</h3>
+					<p>
+						<code class="code">try</code> expressions have the same semantics as <code class="code">try</code> statements 
+						in JavaScript, though in CoffeeScript, you may omit both
+						the <code class="code">catch</code> and <code class="code">finally</code> parts. The <code class="code">catch</code> part may also 
+						omit the <code class="code">error</code> parameter if it is not needed.
+					</p>
+					<pre class="half"><code data-trim data-noescape>
+						#CoffeeScript
+						try
+						  allHellBreaksLoose()
+						  catsAndDogsLivingTogether()
+					 	catch error
+						  print error
+					    finally
+						  cleanUp()
+					</code>
+					
+					</pre>
+					<pre class="half"><code data-trim data-noescape>
+						//JavaScript
+						var error;
+						try {
+						  allHellBreaksLoose();
+						  catsAndDogsLivingTogether();
+						} catch (error1) {
+						  error = error1;
+						  print(error);
+						} finally {
+						  cleanUp();
+						}
+					</code></pre>
+				</small></section>
+				<section><small>
+					<h3>Modules</h3>
+					<p>
+						ES2015 modules are supported in CoffeeScript, 
+						with very similar <code class="code">import</code> and <code class="code">export</code> syntax:
+					</p>
+					<pre class="half"><code data-trim data-noescape>
+						CoffeeScript
+						import 'local-file.coffee'
+						import 'coffeescript'
+						export default Math
+						export square = (x) -> x * x
+					</code>
+					</pre>
+					<pre class="half"><code data-trim data-noescape>
+						//JavaScript
+						import 'local-file.coffee';
+						import 'coffeescript';
+						export default Math;
+						export var square = function(x) {
+						  return x * x;
+						};
+					</code></pre>
+					<p>
+						Note that the CoffeeScript compiler does not resolve modules; 
+						writing an <code class="code">import</code> or <code class="code">export</code> statement in CoffeeScript will 
+						produce an <code class="code">import</code> or <code class="code">export</code> statement in the resulting output.
+						It is your responsibility to transpile this ES2015 syntax into 
+						code that will work in your target runtimes.	
+					</p>
+				</small></section>
+				<section>
+					<h3>Thank you for your attention!</h3>
+					<img src="coffee.jpg" alt="coffee picture">
+					<a href="https://coffeescript.org/" target="_blank">https://coffeescript.org</a>
+				</section>	
 			</div>
 		</div>
 
